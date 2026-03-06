@@ -111,8 +111,6 @@ step "Installing global Composer packages"
 composer global require laravel/pint || warn "pint already installed or failed"
 composer global require laravel/envoy || warn "envoy already installed or failed"
 composer global require spatie/phpunit-watcher || warn "phpunit-watcher already installed or failed"
-composer global require laravel/valet || warn "valet already installed or failed"
-valet install || warn "valet already installed or failed"
 success "Composer packages processed"
 
 # MySQL
