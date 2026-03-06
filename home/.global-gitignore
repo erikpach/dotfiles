@@ -12,6 +12,8 @@ Thumbs.db
 
 # PhpStorm
 .idea
+_ide_helper.php
+.phpstorm.meta.php
 
 # vs code
 .vscode
@@ -32,6 +34,7 @@ yarn-error.log
 
 # Environment files
 .env
+.env.testing
 
 # Claude
 .claude/settings.local.json
