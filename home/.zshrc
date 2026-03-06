@@ -72,7 +72,7 @@ export PATH=$HOME/.dotfiles/bin:$PATH
 ssh-add --apple-use-keychain 2>/dev/null;
 
 # Setup xdebug
-export XDEBUG_CONFIG="idekey=VSCODE"
+export XDEBUG_CONFIG="idekey=PHPSTORM"
 
 # Enable autosuggestions (installed via brew)
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
