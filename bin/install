@@ -113,6 +113,11 @@ composer global require laravel/envoy || warn "envoy already installed or failed
 composer global require spatie/phpunit-watcher || warn "phpunit-watcher already installed or failed"
 success "Composer packages processed"
 
+# MySQL
+step "Starting MySQL"
+brew services start mysql || warn "MySQL already running or failed"
+success "MySQL processed"
+
 # Claude Code setup
 echo ""
 read -p "Install Claude Code? (y/n) " -n 1 -r
