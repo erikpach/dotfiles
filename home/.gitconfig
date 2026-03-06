@@ -1,12 +1,12 @@
 [core]
-	excludesfile = /Users/freek/.global-gitignore
+	excludesfile = ~/.global-gitignore
 	autocrlf = false
 	pager = delta
 
 [user]
-	name = Freek Van der Herten
-	email = freek@spatie.be
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOd4zgKsJm1yDquP2+Ca7nZqUiJ2aZNwxJHP9gg3teWQ
+	name = Erik Pach
+	email = erik@pacholik.dev
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPevDXEJlURBeAFBG0I9yeD3Kw40il4h1AEt7+nHeapJ
 
 [filter "lfs"]
 	required = true
