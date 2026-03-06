@@ -68,5 +68,14 @@
   },
   "alwaysThinkingEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "extraKnownMarketplaces": {
+    "laravel": {
+      "source": {
+        "source": "github",
+        "repo": "laravel/claude-code"
+      }
+    }
+  }
+  "skipDangerousModePermissionPrompt": true,
   "effortLevel": "high"
 }
