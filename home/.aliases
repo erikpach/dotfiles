@@ -1,6 +1,7 @@
 # PHP
 alias phpunit="vendor/bin/phpunit"
 alias a="php artisan"
+alias ap="php artisan play"
 alias ar="php artisan remote"
 alias cc="claude"
 alias ccc="claude-yolo"
