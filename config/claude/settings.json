@@ -63,11 +63,8 @@
     "laravel-simplifier@laravel": true,
     "skill-creator@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "github@claude-plugins-official": true
+    "code-review@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true,
   "extraKnownMarketplaces": {
     "laravel": {
       "source": {
@@ -75,7 +72,9 @@
         "repo": "laravel/claude-code"
       }
     }
-  }
+  },
+  "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
   "skipDangerousModePermissionPrompt": true,
   "effortLevel": "high"
 }
