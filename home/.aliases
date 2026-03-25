@@ -1,3 +1,8 @@
+# Directories
+alias projects='cd $PROJECTS'
+alias eventy='cd $PROJECTS/pacholikdev/eventy'
+alias wodcomp='cd $PROJECTS/pacholikdev/wodcomp'
+
 # PHP
 alias phpunit="vendor/bin/phpunit"
 alias a="php artisan"
