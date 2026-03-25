@@ -40,6 +40,9 @@ alias o="open ."
 # List all files colorized in long format
 alias l="ls -laF"
 
+# Sublime Text
+alias subl='open -a "/Applications/Sublime Text.app"'
+
 # PhpStorm
 alias phpstorm='open -a ~/Applications/PhpStorm.app "`pwd`"'
 
