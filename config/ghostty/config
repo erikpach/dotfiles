@@ -1,5 +1,5 @@
 term = xterm-256color
-working-directory = /Users/freek/dev/code
+working-directory = $PROJECTS
 cursor-style = block
 shell-integration-features = no-cursor
 palette = 2=#5ccd86
