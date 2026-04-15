@@ -3,3 +3,6 @@ working-directory = $PROJECTS
 cursor-style = block
 shell-integration-features = no-cursor
 palette = 2=#5ccd86
+theme = Ayu Light
+font-family = "MesloLGM Nerd Font Mono"
+font-size = 16
