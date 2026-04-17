@@ -49,25 +49,38 @@ if [ ! -d "$DOTFILES_DIR" ]; then
 fi
 
 # Claude configuration
+# Two separate config directories so personal and company accounts have
+# isolated auth/credentials while sharing the same dotfiles configuration.
+CLAUDE_CONFIG_DIRS=(
+    "$HOME/.claude"
+    "$HOME/.claude-company"
+)
+
+configure_claude_dir() {
+    local target_dir="$1"
+    local source_dir="$DOTFILES_DIR/config/claude"
+
+    step "Setting up Claude Code configuration in $target_dir"
+    mkdir -p "$target_dir"
+
+    ln -sf "$source_dir/CLAUDE.md" "$target_dir/CLAUDE.md"
+    ln -sf "$source_dir/laravel-php-guidelines.md" "$target_dir/laravel-php-guidelines.md"
+    ln -sf "$source_dir/settings.json" "$target_dir/settings.json"
+    ln -sf "$source_dir/statusline.sh" "$target_dir/statusline.sh"
+
+    rm -rf "$target_dir/skills"
+    ln -sf "$source_dir/skills" "$target_dir/skills"
+
+    rm -rf "$target_dir/agents"
+    ln -sf "$source_dir/agents" "$target_dir/agents"
+
+    success "Configured $target_dir"
+}
+
 if [ -d "$DOTFILES_DIR/config/claude" ]; then
-    step "Setting up Claude Code configuration"
-    mkdir -p ~/.claude
-
-    # Symlink configuration files
-    ln -sf "$DOTFILES_DIR/config/claude/CLAUDE.md" ~/.claude/CLAUDE.md
-    ln -sf "$DOTFILES_DIR/config/claude/laravel-php-guidelines.md" ~/.claude/laravel-php-guidelines.md
-    ln -sf "$DOTFILES_DIR/config/claude/settings.json" ~/.claude/settings.json
-    ln -sf "$DOTFILES_DIR/config/claude/statusline.sh" ~/.claude/statusline.sh
-
-    # Symlink entire skills directory
-    rm -rf ~/.claude/skills
-    ln -sf "$DOTFILES_DIR/config/claude/skills" ~/.claude/skills
-
-    # Symlink entire agents directory
-    rm -rf ~/.claude/agents
-    ln -sf "$DOTFILES_DIR/config/claude/agents" ~/.claude/agents
-
-    success "Claude Code configured"
+    for dir in "${CLAUDE_CONFIG_DIRS[@]}"; do
+        configure_claude_dir "$dir"
+    done
 else
     warn "Dotfiles directory not found, skipping configuration"
     echo "  To set up configuration later, clone dotfiles to ~/.dotfiles"
@@ -88,6 +101,7 @@ if [ ! -d "$DOTFILES_DIR/config/claude" ]; then
     echo "    ~/.dotfiles/bin/install-claude-code"
     echo ""
 fi
-echo "  • Start using: claude"
+echo "  • Start using personal account: claude"
+echo "  • Start using company account: CLAUDE_CONFIG_DIR=~/.claude-company claude"
 echo "  • Discover more skills: https://skills.sh"
 echo ""
