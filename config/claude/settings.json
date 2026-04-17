@@ -76,6 +76,35 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo '$TOOL_INPUT' | jq -r '.file_path // .path // empty'); if [ -z \"$FILE\" ]; then exit 0; fi; case \"$FILE\" in *.env|*.env.*|*.pem|*.key|*.p12|*.pfx) echo \"BLOCKED: Reading sensitive file: $FILE\" >&2; exit 1;; */secrets/*|*/secret/*|*/.ssh/*|*credentials*) echo \"BLOCKED: Reading sensitive path: $FILE\" >&2; exit 1;; */.bashrc|*/.zshrc|*/.gitconfig|*/.bash_profile) echo \"BLOCKED: Reading system dotfile: $FILE\" >&2; exit 1;; *) exit 0;; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo '$TOOL_INPUT' | jq -r '.file_path // .path // empty'); if [ -z \"$FILE\" ]; then exit 0; fi; case \"$FILE\" in *.env|*.env.*|*.pem|*.key|*.p12|*.pfx) echo \"BLOCKED: Writing to sensitive file: $FILE\" >&2; exit 1;; */secrets/*|*/secret/*|*/.ssh/*|*credentials*) echo \"BLOCKED: Writing to sensitive path: $FILE\" >&2; exit 1;; */.bashrc|*/.zshrc|*/.gitconfig|*/.bash_profile) echo \"BLOCKED: Writing to system dotfile: $FILE\" >&2; exit 1;; *) exit 0;; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CMD=$(echo '$TOOL_INPUT' | jq -r '.command // empty'); if [ -z \"$CMD\" ]; then exit 0; fi; if echo \"$CMD\" | grep -qEi 'rm\\s+-rf\\s+/|drop\\s+table|drop\\s+database|kubectl\\s+delete|git\\s+push\\s+--force|git\\s+push\\s+-f|terraform\\s+destroy|cloudformation\\s+delete|mktoken|create.*token|invite.*user|chmod\\s+777'; then echo \"BLOCKED: Destructive or privilege-escalating command detected\" >&2; exit 1; fi; exit 0"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "*",
@@ -83,6 +112,15 @@
           {
             "type": "command",
             "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo '$TOOL_INPUT' | jq -r '.file_path // .path // empty'); if [ -z \"$FILE\" ] || [ ! -f \"$FILE\" ]; then exit 0; fi; if grep -qEi '(AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|ghp_[0-9a-zA-Z]{36}|glpat-[0-9a-zA-Z_-]{20,}|sk-[0-9a-zA-Z]{32,}|-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----|password\\s*[:=]\\s*[\"'\\x27][^\"'\\x27]{8,}[\"'\\x27])' \"$FILE\" 2>/dev/null; then echo \"WARNING: Possible secret detected in $FILE. Review before committing.\" >&2; exit 1; fi; exit 0"
           }
         ]
       }
