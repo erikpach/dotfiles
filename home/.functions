@@ -106,11 +106,11 @@ function claude-yolo() {
   claude --dangerously-skip-permissions "$@"
 }
 
-function claude-work() {
-  CLAUDE_CONFIG_DIR=~/.claude-company claude --dangerously-skip-permissions "$@"
+function claude-personal() {
+  CLAUDE_CONFIG_DIR=~/.claude-personal claude --dangerously-skip-permissions "$@"
 }
 
-function claude-personal() {
+function claude-work() {
   CLAUDE_CONFIG_DIR=~/.claude claude --dangerously-skip-permissions "$@"
 }
 
