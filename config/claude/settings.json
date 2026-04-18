@@ -177,7 +177,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "model": "opus[1m]"
 }
