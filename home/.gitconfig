@@ -30,7 +30,7 @@
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 
 [commit]
-	gpgsign = true
+	gpgsign = false
 
 [push]
 	autoSetupRemote = true
