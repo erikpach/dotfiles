@@ -76,16 +76,16 @@ function commit() {
 function db() {
     case "$1" in
         refresh)
-            mysql -uroot -e "drop database $2; create database $2"
+            mysql -u root -h 127.0.0.1 -P 3306 -e "drop database $2; create database $2"
             ;;
         create)
-            mysql -uroot -e "create database $2"
+            mysql -u root -h 127.0.0.1 -P 3306 -e "create database $2"
             ;;
         drop)
-            mysql -uroot -e "drop database $2"
+            mysql -u root -h 127.0.0.1 -P 3306 -e "drop database $2"
             ;;
         list)
-            mysql -uroot -e "show databases" | sed 's/[|[:space:]]//g'
+            mysql -u root -h 127.0.0.1 -P 3306 -e "show databases" | sed 's/[|[:space:]]//g'
             ;;
         *)
             echo "Usage: db {refresh|create|drop|list} [database_name]"
