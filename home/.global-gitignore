@@ -36,5 +36,8 @@ yarn-error.log
 .env
 .env.testing
 
+# Testing
+phpunit.xml.test
+
 # Claude
 .claude/settings.local.json
