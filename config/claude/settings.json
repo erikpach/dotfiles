@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
+  },
   "permissions": {
     "allow": [
       "Skill(ray-skill:*)",
@@ -53,8 +56,9 @@
       "mcp__laravel-boost__*",
       "mcp__chrome-devtools__*"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -152,9 +156,6 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "env": {
-    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
-  },
   "enabledPlugins": {
     "laravel-simplifier@laravel": true,
     "skill-creator@claude-plugins-official": true,
@@ -179,5 +180,5 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
-  "model": "opus[1m]"
+  "skipAutoPermissionPrompt": true
 }
