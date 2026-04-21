@@ -107,11 +107,11 @@ function claude-yolo() {
 }
 
 function claude-personal() {
-  CLAUDE_CONFIG_DIR=~/.claude-personal claude --dangerously-skip-permissions "$@"
+  CLAUDE_CONFIG_DIR=~/.claude-personal claude --permission-mode auto "$@"
 }
 
 function claude-work() {
-  CLAUDE_CONFIG_DIR=~/.claude claude --dangerously-skip-permissions "$@"
+  CLAUDE_CONFIG_DIR=~/.claude claude --permission-mode auto "$@"
 }
 
 function git-prune-local() {
