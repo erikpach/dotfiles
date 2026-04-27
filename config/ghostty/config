@@ -6,3 +6,6 @@ palette = 2=#5ccd86
 theme = Ayu Light
 font-family = "MesloLGM Nerd Font Mono"
 font-size = 16
+unfocused-split-opacity = 0.55
+unfocused-split-fill = #7a7a7a
+split-divider-color = #000000

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 2400px;
+    height: 1350px;
+    background: #f0ece8;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+    padding: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0;
+    overflow: hidden;
+  }
+
+  .card {
+    background: #faf8f6;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    background: #f5f2ef;
+    flex-shrink: 0;
+  }
+
+  .dots { display: flex; gap: 7px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot:nth-child(1) { background: #ef4444; }
+  .dot:nth-child(2) { background: #eab308; }
+  .dot:nth-child(3) { background: #22c55e; }
+
+  .filename { color: #6b7280; font-size: 14px; margin-left: 6px; }
+
+  .code {
+    padding: 24px 28px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #24292e;
+    flex: 1;
+  }
+
+  /* Syntax highlighting (same as single template) */
+  .keyword    { color: #22863a; }
+  .string     { color: #032f62; }
+  .method     { color: #6f42c1; }
+  .class-name { color: #6f42c1; }
+  .comment    { color: #6a737d; font-style: italic; }
+  .variable   { color: #e36209; }
+  .arrow      { color: #24292e; }
+  .punctuation{ color: #24292e; }
+  .facade     { color: #6f42c1; }
+  .named-arg  { color: #e36209; }
+  .env-key    { color: #22863a; font-weight: 500; }
+  .env-val    { color: #032f62; }
+  .number     { color: #005cc5; }
+  .type       { color: #6f42c1; }
+</style>
+</head>
+<body>
+  <!-- CARD 1 -->
+  <div class="card">
+    <div class="header">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="filename"><!-- FILENAME 1 --></span>
+    </div>
+    <div class="code"><!-- CODE 1 --></div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="card">
+    <div class="header">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="filename"><!-- FILENAME 2 --></span>
+    </div>
+    <div class="code"><!-- CODE 2 --></div>
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="card">
+    <div class="header">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="filename"><!-- FILENAME 3 --></span>
+    </div>
+    <div class="code"><!-- CODE 3 --></div>
+  </div>
+
+  <!-- CARD 4 -->
+  <div class="card">
+    <div class="header">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span class="filename"><!-- FILENAME 4 --></span>
+    </div>
+    <div class="code"><!-- CODE 4 --></div>
+  </div>
+</body>
+</html>
