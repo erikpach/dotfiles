@@ -270,7 +270,7 @@ All drafts commands support an optional `[social_set_id]` - if omitted, the conf
 | `drafts:create [social_set_id] --platform x --text "..."` | Create a draft for specific platform(s) |
 | `drafts:create [social_set_id] --all --text "..."` | Create a draft for all connected platforms |
 | `drafts:create [social_set_id] --file <path>` | Create draft from file content |
-| `drafts:create ... --media <media_ids>` | Create draft with attached media |
+| `drafts:create ... --media <media_ids>` | Attach media. `,` separates ids on the same post; `\|` delimits per-post groups in a thread (mirrors how `---` delimits text). |
 | `drafts:create ... --reply-to <url>` | Reply to an existing X post |
 | `drafts:create ... --community <id>` | Post to an X community |
 | `drafts:create ... --quote-post-url <url>` | Quote an existing X post URL |
@@ -475,9 +475,50 @@ Use `queue:get` when the user asks what is already scheduled (or free) for a giv
 ./scripts/typefully.js media:upload ./photo1.jpg  # Returns media_id: id1
 ./scripts/typefully.js media:upload ./photo2.jpg  # Returns media_id: id2
 
-# Create post with multiple media (comma-separated)
+# Create post with multiple media on one post (comma-separated)
 ./scripts/typefully.js drafts:create --text "Photo dump!" --media id1,id2
 ```
+
+### Per-post media in a thread
+
+Use `|` to delimit per-post media groups, mirroring how `---` delimits text into a thread. Each `|`-separated group is attached to the post at the matching index. Within a group, `,` still attaches multiple media to the same post.
+
+```bash
+# Thread of 3 posts, one image per post:
+./scripts/typefully.js drafts:create --platform x --media id1,id2,id3 --text "Intro post
+
+---
+
+Middle post
+
+---
+
+Final post"
+# Wait — that comma form attaches all three to post 0. Use `|` instead:
+
+./scripts/typefully.js drafts:create --platform x --media "id1|id2|id3" --text "Intro post
+
+---
+
+Middle post
+
+---
+
+Final post"
+
+# Mix multiple media on one post and skip another post:
+./scripts/typefully.js drafts:create --media "a,b||c" --text "Two images here
+
+---
+
+This post has no media
+
+---
+
+One image on the last post"
+```
+
+A single comma-only spec (no `|`) keeps the historical behavior of attaching to post 0 only.
 
 ### Add media to an existing draft
 ```bash

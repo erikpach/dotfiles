@@ -485,6 +485,30 @@ function splitThreadText(text) {
   return text.split(/\r?\n[ \t]*---[ \t]*\r?\n/).filter(t => t.trim());
 }
 
+// Parse the --media flag into per-post groups.
+//
+// Syntax:
+//   --media id1,id2          → [["id1","id2"]]            single group, attaches to first post
+//   --media id1|id2|id3      → [["id1"],["id2"],["id3"]]  per-post: post 0=id1, post 1=id2, post 2=id3
+//   --media a,b|c|d,e        → [["a","b"],["c"],["d","e"]] mixed
+//   --media |id2|id3         → [[],["id2"],["id3"]]       skip post 0, attach to posts 1 and 2
+//
+// Returns an array-of-arrays. Caller indexes by post index.
+// A single group (no `|`) is attached to post 0 only, preserving prior behavior.
+function parseMediaSpec(rawValue) {
+  if (!rawValue) {
+    return [];
+  }
+  const groups = rawValue.split('|').map(group =>
+    group.split(',').map(id => id.trim()).filter(Boolean)
+  );
+  if (groups.length === 1) {
+    // Backwards-compatible: comma-only spec attaches to first post.
+    return groups[0].length > 0 ? [groups[0]] : [];
+  }
+  return groups;
+}
+
 function getContentType(filename) {
   const ext = path.extname(filename).slice(1).toLowerCase();
   return CONTENT_TYPES[ext] || 'application/octet-stream';
@@ -1037,15 +1061,17 @@ async function cmdDraftsCreate(args) {
   // Split text into posts (thread support)
   const posts = splitThreadText(text);
 
-  // Parse media IDs
-  const mediaIds = parsed.media ? parsed.media.split(',').map(m => m.trim()) : [];
+  // Parse media IDs. `|` delimits per-post groups (mirrors `---` for text);
+  // `,` separates multiple media within one post. A single group with no `|`
+  // is attached to the first post (preserves the historical default).
+  const mediaPerPost = parseMediaSpec(parsed.media);
 
   // Build posts array
   const basePostsArray = posts.map((postText, index) => {
     const post = { text: postText };
-    // Attach media only to first post
-    if (index === 0 && mediaIds.length > 0) {
-      post.media_ids = mediaIds;
+    const ids = mediaPerPost[index];
+    if (ids && ids.length > 0) {
+      post.media_ids = ids;
     }
     return post;
   });
@@ -1127,8 +1153,9 @@ async function cmdDraftsUpdate(args) {
       error('--quote-post-url is only supported for X posts. Include x in --platform or remove the quote flag.');
     }
 
-    // Parse media IDs
-    const mediaIds = parsed.media ? parsed.media.split(',').map(m => m.trim()) : [];
+    // Parse media IDs. See parseMediaSpec for the `|`/`,` syntax.
+    const mediaPerPost = parseMediaSpec(parsed.media);
+    const flatMediaIds = mediaPerPost.flat();
 
     // Fetch existing draft to determine platforms (and for --append, to get posts)
     const existing = await apiRequest('GET', `/social-sets/${socialSetId}/drafts/${draftId}`);
@@ -1171,19 +1198,20 @@ async function cmdDraftsUpdate(args) {
           }
         }
 
-        // Append new post
+        // Append new post (single new post, so flatten any per-post media into one bag)
         const newPost = { text };
-        if (mediaIds.length > 0) {
-          newPost.media_ids = mediaIds;
+        if (flatMediaIds.length > 0) {
+          newPost.media_ids = flatMediaIds;
         }
         postsArray = [...existingPosts, newPost];
       } else {
-        // Replace with new posts
+        // Replace with new posts. Per-post media via `|` in --media (see parseMediaSpec).
         const posts = splitThreadText(text);
         postsArray = posts.map((postText, index) => {
           const post = { text: postText };
-          if (index === 0 && mediaIds.length > 0) {
-            post.media_ids = mediaIds;
+          const ids = mediaPerPost[index];
+          if (ids && ids.length > 0) {
+            post.media_ids = ids;
           }
           return post;
         });
@@ -1602,7 +1630,7 @@ COMMANDS:
     --all                                    Post to all connected platforms
     --text <text>                            Post content (use --- on its own line for threads)
     --file, -f <path>                        Read content from file instead of --text
-    --media <media_ids>                      Comma-separated media IDs to attach
+    --media <media_ids>                      Comma-separates media on one post; "|" delimits per-post groups in a thread
     --title <title>                          Draft title (internal only)
     --schedule <time>                        "now", "next-free-slot", or ISO datetime
     --tags <tag_slugs>                       Comma-separated tag slugs
@@ -1617,7 +1645,7 @@ COMMANDS:
                                              (preserves draft's existing platforms if omitted)
     --text <text>                            New post content
     --file, -f <path>                        Read content from file instead of --text
-    --media <media_ids>                      Comma-separated media IDs to attach
+    --media <media_ids>                      Comma-separates media on one post; "|" delimits per-post groups in a thread
     --append, -a                             Append to existing thread instead of replacing
     --title <title>                          New draft title
     --schedule <time>                        "now", "next-free-slot", or ISO datetime

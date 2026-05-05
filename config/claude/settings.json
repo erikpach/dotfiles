@@ -190,5 +190,7 @@
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "theme": "light",
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": false,
   "skipAutoPermissionPrompt": true
 }
