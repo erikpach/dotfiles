@@ -10,7 +10,9 @@ ctx_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d.
 
 # Usage limits
 five_hr_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' | cut -d. -f1)
+five_hr_resets=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 seven_day_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' | cut -d. -f1)
+seven_day_resets=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 
 # Model short name
 model_id=$(echo "$input" | jq -r '.model.id // ""')
@@ -72,8 +74,8 @@ fi
 # Context
 printf ' | ctx:%b%s%%\033[00m' "$ctx_color" "$ctx_pct"
 
-# Usage limits (session 5hr + weekly 7day)
-if [ -n "$five_hr_pct" ]; then
+# Usage limits (session 5hr + weekly 7day) — color only the percentage
+if [ -n "$five_hr_pct" ] && [ -n "$five_hr_resets" ]; then
   if [ "$five_hr_pct" -ge 75 ]; then
     limit_color='\033[01;31m'
   elif [ "$five_hr_pct" -ge 50 ]; then
@@ -81,9 +83,10 @@ if [ -n "$five_hr_pct" ]; then
   else
     limit_color='\033[00;32m'
   fi
-  printf ' | %b5hr:%s%%\033[00m' "$limit_color" "$five_hr_pct"
+  five_hr_end=$(date -r "$five_hr_resets" "+%H:%M")
+  printf ' | 5hr: %b%s%%\033[00m (%s)' "$limit_color" "$five_hr_pct" "$five_hr_end"
 fi
-if [ -n "$seven_day_pct" ]; then
+if [ -n "$seven_day_pct" ] && [ -n "$seven_day_resets" ]; then
   if [ "$seven_day_pct" -ge 75 ]; then
     week_color='\033[01;31m'
   elif [ "$seven_day_pct" -ge 50 ]; then
@@ -91,7 +94,8 @@ if [ -n "$seven_day_pct" ]; then
   else
     week_color='\033[00;32m'
   fi
-  printf ' | %b7d:%s%%\033[00m' "$week_color" "$seven_day_pct"
+  seven_day_end=$(date -r "$seven_day_resets" "+%a %H:%M")
+  printf ' | 7d: %b%s%%\033[00m (%s)' "$week_color" "$seven_day_pct" "$seven_day_end"
 fi
 
 # Model
