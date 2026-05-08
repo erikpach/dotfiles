@@ -25,7 +25,6 @@
   },
   "title_bar": {
     "show_branch_name": true,
-    "show_branch_icon": false,
     "show_menus": true,
     "show_sign_in": false,
     "show_onboarding_banner": false,
