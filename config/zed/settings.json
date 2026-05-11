@@ -1,6 +1,8 @@
 // Zed settings
 // Matched to PhpStorm / VS Code setup
 {
+  "icon_theme": "Material Icon Theme",
+  "base_keymap": "JetBrains",
   // Theme - light, matching IntelliJ
   "ui_font_weight": 400.0,
   "use_system_window_tabs": true,
@@ -36,7 +38,7 @@
     "active_language_button": false,
   },
   "edit_predictions": {
-    "provider": "copilot",
+    "provider": "none",
   },
   "theme": "One Light",
   "theme_overrides": {
@@ -174,10 +176,35 @@
       "language_servers": ["intelephense", "!phpactor", "!phptools", "..."],
       "formatter": {
         "external": {
-          "command": "/Users/freek/bin/php-format",
+          "command": "/Users/pacholik/.dotfiles/bin/php-format",
           "arguments": ["{buffer_path}"],
         },
       },
     },
+    "Blade": {
+      "language_servers": ["tailwindcss-language-server", "..."],
+      "tab_size": 2,
+    },
+  },
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "blade": "html",
+        },
+      },
+    },
+  },
+  "prettier": {
+    "allowed": true,
+  },
+  "sticky_scroll": {
+    "enabled": true,
+  },
+  "wrap_guides": [140],
+  "tabs": {
+    "git_status": true,
+    "file_icons": true,
+    "show_diagnostics": "errors",
   },
 }
