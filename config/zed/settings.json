@@ -2,6 +2,7 @@
 // Matched to PhpStorm / VS Code setup
 {
   // Theme - light, matching IntelliJ
+  "ui_font_weight": 400.0,
   "use_system_window_tabs": true,
   "show_edit_predictions": true,
   "telemetry": {
@@ -71,7 +72,7 @@
   "buffer_font_features": {
     "liga": true,
   },
-  "ui_font_size": 14,
+  "ui_font_size": 17.0,
 
   // Minimal UI
   "tab_bar": {
