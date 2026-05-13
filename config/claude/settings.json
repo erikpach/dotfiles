@@ -59,6 +59,16 @@
       "mcp__laravel-boost__*",
       "mcp__chrome-devtools__*"
     ],
+    "deny": [
+      "Read(**/node_modules/**)",
+      "Read(**/vendor/**)",
+      "Read(**/dist/**)",
+      "Read(**/build/**)",
+      "Read(**/.next/**)",
+      "Read(**/coverage/**)",
+      "Read(**/__pycache__/**)",
+      "Read(**/.venv/**)"
+    ],
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
