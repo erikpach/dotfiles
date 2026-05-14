@@ -1,6 +1,7 @@
 // Zed settings
 // Matched to PhpStorm / VS Code setup
 {
+  "ui_font_family": ".ZedSans",
   "icon_theme": "Material Icon Theme",
   "base_keymap": "JetBrains",
   // Theme - light, matching IntelliJ
@@ -67,14 +68,14 @@
 
   // Typography - matching PhpStorm
   "buffer_font_family": "JetBrains Mono",
-  "buffer_font_size": 15.0,
+  "buffer_font_size": 17.0,
   "buffer_line_height": {
     "custom": 1.7,
   },
   "buffer_font_features": {
     "liga": true,
   },
-  "ui_font_size": 17.0,
+  "ui_font_size": 18.0,
 
   // Minimal UI
   "tab_bar": {
@@ -111,7 +112,7 @@
   "terminal": {
     "button": false,
     "font_family": "MesloLGM Nerd Font Mono",
-    "font_size": 14,
+    "font_size": 15.0,
     "line_height": {
       "custom": 1.5,
     },
