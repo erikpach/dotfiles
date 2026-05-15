@@ -120,6 +120,15 @@
             "command": "CMD=$(echo '$TOOL_INPUT' | jq -r '.command // empty'); if [ -z \"$CMD\" ]; then exit 0; fi; if echo \"$CMD\" | grep -qEi 'rm\\s+-rf\\s+/|drop\\s+table|drop\\s+database|kubectl\\s+delete|git\\s+push\\s+--force|git\\s+push\\s+-f|terraform\\s+destroy|cloudformation\\s+delete|mktoken|create.*token|invite.*user|chmod\\s+777'; then echo \"BLOCKED: Destructive or privilege-escalating command detected\" >&2; exit 1; fi; exit 0"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
       }
     ],
     "PostToolUse": [
