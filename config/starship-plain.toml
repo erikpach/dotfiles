@@ -1,0 +1,67 @@
+# Starship configuration - plain variant (no Nerd Font / powerline glyphs)
+# Used inside Conductor's terminal, which can't render powerline separators or
+# Nerd Font icons. Same segments and Solarized colors as starship.toml, but as
+# foreground text instead of powerline blocks, so it renders in any font.
+# https://starship.rs/config/
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$character"""
+
+add_newline = false
+
+[directory]
+style = "fg:#2aa198 bold"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = true
+
+[git_branch]
+symbol = ""
+style = "fg:#b58900 bold"
+format = "[$branch]($style) "
+
+[git_status]
+style = "fg:#cb4b16"
+format = "[$all_status$ahead_behind]($style)"
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+[character]
+success_symbol = "[→](bold green)"
+error_symbol = "[→](bold red)"
+
+[time]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[php]
+disabled = true
+
+[ruby]
+disabled = true
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[package]
+disabled = true

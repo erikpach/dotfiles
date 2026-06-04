@@ -84,7 +84,14 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 # Modern tools
 # Starship prompt
 if command -v starship &>/dev/null; then
-    export STARSHIP_CONFIG=~/.dotfiles/config/starship.toml
+    # Conductor's terminal can't render powerline/Nerd Font glyphs, so use a
+    # plain prompt there. Every other terminal (Ghostty, iTerm, ...) keeps the
+    # full powerline prompt.
+    if [[ "$__CFBundleIdentifier" == "com.conductor.app" || -n "$CONDUCTOR_INTERNAL_BIN_DIR" ]]; then
+        export STARSHIP_CONFIG=~/.dotfiles/config/starship-plain.toml
+    else
+        export STARSHIP_CONFIG=~/.dotfiles/config/starship.toml
+    fi
     eval "$(starship init zsh)"
 fi
 

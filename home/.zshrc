@@ -83,6 +83,10 @@ export PATH="$HOME/.composer/vendor/bin:$PATH"
 export PATH=/usr/local/bin:$PATH
 export PATH="$HOME/.yarn/bin:$PATH"
 
+# Use the Homebrew-path valet so `valet trust` (which whitelists /opt/homebrew/bin/valet)
+# lets secure/link/open etc. run without a sudo password prompt.
+alias valet="/opt/homebrew/bin/valet"
+
 
 #export PATH=/Users/Shared/DBngin/postgresql/17.0/bin:$PATH
 

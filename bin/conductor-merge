@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+#
+# conductor-merge — merge the current Conductor workspace branch into main.
+#
+# Conductor workspaces are git worktrees that share one repository. `main` is
+# checked out in a different worktree (your main repo), so you can't just
+# `git checkout main` from inside a workspace. This finds the worktree that
+# holds `main` and fast-forwards it onto your current branch.
+#
+# Fast-forward only on purpose: when another workspace merged first, `main`
+# has moved and this stops loudly (telling you to rebase) instead of creating
+# a surprise merge commit or conflicts.
+#
+# Usage:
+#   conductor-merge            # commit pending work, ff-merge into local main
+#   conductor-merge --push     # ...then push main to origin (clears Conductor's
+#                              #    "Changes" view, which diffs against origin/main)
+#
+set -euo pipefail
+
+push=false
+[ "${1:-}" = "--push" ] && push=true
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$branch" = "main" ]; then
+  echo "Already on main — nothing to merge." >&2
+  exit 1
+fi
+
+# Locate the worktree that has `main` checked out.
+main_worktree=$(git worktree list --porcelain \
+  | awk '/^worktree /{wt=substr($0,10)} /^branch refs\/heads\/main$/{print wt}')
+
+if [ -z "$main_worktree" ]; then
+  echo "main is not checked out in any worktree — aborting." >&2
+  exit 1
+fi
+
+# Refuse if the main worktree has uncommitted changes; a merge would be messy.
+if [ -n "$(git -C "$main_worktree" status --porcelain)" ]; then
+  echo "main worktree ($main_worktree) has uncommitted changes — aborting." >&2
+  exit 1
+fi
+
+# Commit anything still pending on this branch first.
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Committing pending changes on $branch..."
+  git add -A
+  git commit
+fi
+
+echo "Fast-forwarding main onto $branch (in $main_worktree)..."
+if ! git -C "$main_worktree" merge --ff-only "$branch"; then
+  echo "" >&2
+  echo "Not a fast-forward: main has moved since this branch started." >&2
+  echo "Rebase first, then re-run:" >&2
+  echo "  git fetch && git rebase main" >&2
+  exit 1
+fi
+
+if $push; then
+  echo "Pushing main to origin..."
+  git -C "$main_worktree" push origin main
+fi
+
+echo "Done: main now includes $branch."

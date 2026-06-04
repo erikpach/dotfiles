@@ -327,6 +327,7 @@ The `bin/` directory contains helper scripts:
 - **install-claude-code** - Standalone Claude Code installer
 - **update** - Update dotfiles, Homebrew, npm, and Composer packages
 - **doctor** - Health check and diagnostic tool
+- **conductor-merge** - Fast-forward the current Conductor workspace branch into `main` (which lives in another git worktree). Use `--push` to also push `main` to `origin`, which clears Conductor's "Changes" view (it diffs against `origin/main`).
 
 ---
 
