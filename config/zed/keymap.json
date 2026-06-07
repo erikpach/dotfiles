@@ -6,8 +6,8 @@
       "cmd-shift-c": "terminal_panel::ToggleFocus",
       "cmd-e": "file_finder::Toggle",
       "cmd-shift-g": "editor::OpenPermalinkToLine",
-      "cmd-y": "outline::Toggle"
-    }
+      "cmd-y": "outline::Toggle",
+    },
   },
   {
     "context": "Editor",
@@ -19,39 +19,35 @@
       "alt-space": "editor::Hover",
       "cmd-shift-g": "editor::OpenPermalinkToLine",
       "cmd-alt-l": "editor::Format",
-      "ctrl-h": "pane::SplitDown"
-    }
+      "ctrl-h": "pane::SplitDown",
+    },
   },
   {
     "context": "Editor && mode == full",
     "bindings": {
-      "cmd-i": "pane::RevealInProjectPanel"
-    }
+      "cmd-i": "pane::RevealInProjectPanel",
+    },
   },
   {
     "context": "Terminal",
     "bindings": {
       "cmd-shift-c": "workspace::ToggleBottomDock",
       "cmd-e": "file_finder::Toggle",
-      "ctrl-h": "pane::SplitDown"
-    }
+      "ctrl-h": "pane::SplitDown",
+    },
   },
   {
-    "context": "Workspace",
+    "context": "Pane",
     "bindings": {
-      "ctrl-tab": null
-    }
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
-      "ctrl-shift-tab": null
-    }
+      "ctrl-tab": ["tab_switcher::Toggle", { "select_last": false }],
+      "ctrl-shift-tab": ["tab_switcher::Toggle", { "select_last": true }],
+    },
   },
   {
     "bindings": {
       "ctrl-v": "pane::SplitRight",
-      "ctrl-h": "pane::SplitDown"
-    }
-  }
+      "ctrl-h": "pane::SplitDown",
+      "cmd-p": "file_finder::Toggle",
+    },
+  },
 ]
