@@ -47,6 +47,18 @@ if [ -f "$caveman_flag" ] && [ ! -L "$caveman_flag" ]; then
   esac
 fi
 
+# Ponytail badge
+ponytail_flag="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.ponytail-active"
+ponytail_badge=""
+if [ -f "$ponytail_flag" ] && [ ! -L "$ponytail_flag" ]; then
+  pony_mode=$(head -n1 "$ponytail_flag" 2>/dev/null | tr -d '[:space:]')
+  if [ -z "$pony_mode" ] || [ "$pony_mode" = "full" ]; then
+    ponytail_badge=$(printf '\033[38;5;108m[PONYTAIL]\033[0m')
+  elif [ "$pony_mode" != "off" ]; then
+    ponytail_badge=$(printf '\033[38;5;108m[PONYTAIL:%s]\033[0m' "$(printf '%s' "$pony_mode" | tr '[:lower:]' '[:upper:]')")
+  fi
+fi
+
 # Context color
 if [ "$ctx_pct" -ge 75 ]; then
   ctx_color='\033[01;31m'   # red
@@ -116,6 +128,11 @@ fi
 # Caveman badge
 if [ -n "$caveman_badge" ]; then
   printf ' %b' "$caveman_badge"
+fi
+
+# Ponytail badge
+if [ -n "$ponytail_badge" ]; then
+  printf ' %b' "$ponytail_badge"
 fi
 
 printf '\033[00m'
