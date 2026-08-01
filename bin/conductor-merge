@@ -12,14 +12,34 @@
 # a surprise merge commit or conflicts.
 #
 # Usage:
-#   conductor-merge            # commit pending work, ff-merge into local main
-#   conductor-merge --push     # ...then push main to origin (clears Conductor's
-#                              #    "Changes" view, which diffs against origin/main)
+#   conductor-merge                # commit pending work, ff-merge into local main
+#   conductor-merge --push         # ...then push main to origin (clears Conductor's
+#                                  #    "Changes" view, which diffs against origin/main)
+#   conductor-merge -m "message"   # use this commit message, skip the editor
 #
 set -euo pipefail
 
 push=false
-[ "${1:-}" = "--push" ] && push=true
+message=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --push)
+      push=true
+      shift
+      ;;
+    -m | --message)
+      message="${2:-}"
+      shift
+      [ $# -gt 0 ] && shift
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      echo "Usage: conductor-merge [--push] [-m \"commit message\"]" >&2
+      exit 1
+      ;;
+  esac
+done
 
 branch=$(git rev-parse --abbrev-ref HEAD)
 
@@ -44,10 +64,23 @@ if [ -n "$(git -C "$main_worktree" status --porcelain)" ]; then
 fi
 
 # Commit anything still pending on this branch first.
+#
+# A bare `git commit` opens the editor and aborts the whole merge if the message
+# is left empty. Instead we pre-fill the editor with a default subject derived
+# from the branch name, so saving without typing still commits. Pass -m to skip
+# the editor entirely. Deliberately erasing the message and saving still cancels.
 if [ -n "$(git status --porcelain)" ]; then
   echo "Committing pending changes on $branch..."
   git add -A
-  git commit
+  if [ -n "$message" ]; then
+    git commit -m "$message"
+  else
+    default_message=$(printf '%s' "${branch#*/}" | tr '-' ' ')
+    if ! git commit --edit --message "$default_message"; then
+      echo "Commit cancelled (empty message) — aborting merge." >&2
+      exit 1
+    fi
+  fi
 fi
 
 echo "Fast-forwarding main onto $branch (in $main_worktree)..."

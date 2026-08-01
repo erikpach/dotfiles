@@ -212,6 +212,7 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "fastMode": true,
   "awaySummaryEnabled": false,
   "voice": {
     "enabled": true,
@@ -222,5 +223,5 @@
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": false,
   "skipAutoPermissionPrompt": true,
-  "fastMode": true
+  "model": "claude-fable-5[1m]"
 }

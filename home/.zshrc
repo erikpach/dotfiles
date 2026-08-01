@@ -1,6 +1,10 @@
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
+# Skip oh-my-zsh's compaudit insecure-directory scan on startup (~20ms). Safe on
+# a single-user machine where we control everything in fpath.
+ZSH_DISABLE_COMPFIX="true"
+
 # Path to custom themes and plugins
 ZSH_CUSTOM=$HOME/.dotfiles/oh-my-zsh-custom
 
@@ -8,8 +12,16 @@ ZSH_CUSTOM=$HOME/.dotfiles/oh-my-zsh-custom
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="agnoster"
-AGNOSTER_DIR_FG=black
+# Conductor's built-in terminal can't render agnoster's powerline/Nerd Font
+# glyphs, so use a plain prompt there (set up after oh-my-zsh loads, below).
+# Every other terminal (Ghostty, iTerm, ...) keeps agnoster.
+if [[ "$__CFBundleIdentifier" == "com.conductor.app" || -n "$CONDUCTOR_INTERNAL_BIN_DIR" ]]; then
+    CONDUCTOR_TERMINAL=1
+    ZSH_THEME=""
+else
+    ZSH_THEME="agnoster"
+    AGNOSTER_DIR_FG=black
+fi
 
 # Hide username in prompt
 DEFAULT_USER=`whoami`
@@ -19,7 +31,30 @@ DEFAULT_USER=`whoami`
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git composer macos brew laravel)
 
+# Add Homebrew's completions to fpath *before* oh-my-zsh runs compinit, so its
+# single completion init picks them up (avoids a second, expensive compinit).
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
 source $ZSH/oh-my-zsh.sh
+
+# Plain prompt for Conductor's terminal: no powerline separators or Nerd Font
+# glyphs (those render as tofu boxes there). Uses only glyphs present in the
+# default font. The git plugin provides git_prompt_info.
+if [[ -n "$CONDUCTOR_TERMINAL" ]]; then
+    setopt prompt_subst
+    # Mimic agnoster's segmented look without Nerd Font/powerline glyphs
+    # (Conductor's terminal renders those as tofu boxes). Solid color blocks
+    # stand in for the slanted powerline separators: a blue directory segment
+    # and a green git segment, matching the agnoster theme used in Ghostty.
+    conductor_git_segment() {
+        local branch
+        branch=$(command git symbolic-ref --short HEAD 2>/dev/null) || return
+        local dirty=""
+        [[ -n "$(command git status --porcelain 2>/dev/null)" ]] && dirty=" *"
+        print -n "%K{green}%F{black} ${branch}${dirty} %k"
+    }
+    PROMPT='%K{blue}%F{white} %~ %k$(conductor_git_segment)%f '
+fi
 
 # Removed old RVM path
 #set numeric keys
@@ -75,7 +110,7 @@ ssh-add --apple-use-keychain 2>/dev/null;
 export XDEBUG_CONFIG="idekey=PHPSTORM"
 
 # Enable autosuggestions (installed via brew)
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 
 # Extra paths
@@ -91,7 +126,7 @@ alias valet="/opt/homebrew/bin/valet"
 #export PATH=/Users/Shared/DBngin/postgresql/17.0/bin:$PATH
 
 export PATH=$HOME/bin:~/.config/phpmon/bin:$PATH
-export JAVA_HOME="$(brew --prefix)/opt/openjdk@17"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
@@ -113,5 +148,8 @@ fi
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
-autoload -Uz compinit && compinit
+
+# Raise the open-file limit. macOS defaults NOFILE to "unlimited", which the
+# kernel clamps to a tiny legacy value for real open() calls, causing
+# "Too many open files" in test runs. A concrete number avoids that clamp.
+ulimit -n 65536
